@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
-import { useQuery } from 'react-apollo';
+import React, { useState } from 'react';
+import Messages from '../../Components/Messages';
+import { useQuery, useMutation } from 'react-apollo';
 import gql from 'graphql-tag';
 
 const NEW_MESSAGE_SUBSCRIPTION = gql`
@@ -26,18 +27,40 @@ const GET_MESSAGES_FROM_CONVO = gql`
 	}
 `;
 
+const CREATE_MESSAGE = gql`
+	mutation($text: String!, $convoId: ID!) {
+		createMessage(convoId: $convoId, text: $text) {
+			ok
+			message {
+				text
+				convoId
+				userId
+			}
+		}
+	}
+`;
+
 const TESTING_CONVO_ID = '1a7b4899-959b-495b-97a4-b2203de8d02b';
 
-const Test = () => {
+const MessagesContainer = () => {
+	const [text, setText] = useState('');
+	const [create] = useMutation(CREATE_MESSAGE, { variables: { text, convoId: TESTING_CONVO_ID } });
 	const { subscribeToMore, ...result } = useQuery(GET_MESSAGES_FROM_CONVO, {
 		variables: {
 			convoId: TESTING_CONVO_ID
 		}
 	});
+	function handleCreateMessageMutation(sub: () => () => void) {
+		create();
+		sub();
+	}
 	return (
-		<Thing
+		<Messages
+			text={text}
+			setText={setText}
+			handleCreateMessageMutation={handleCreateMessageMutation}
 			{...result}
-			subscribeToNewComments={() =>
+			subscribeToNewMessage={() =>
 				subscribeToMore({
 					document: NEW_MESSAGE_SUBSCRIPTION,
 					variables: {
@@ -48,7 +71,6 @@ const Test = () => {
 							newMessage: { message }
 						} = data;
 						if (!data) return getMessagesFromConvo;
-						console.log('this ran');
 						return Object.assign({}, getMessagesFromConvo, {
 							getMessagesFromConvo: {
 								__typename: getMessagesFromConvo.__typename,
@@ -63,20 +85,4 @@ const Test = () => {
 	);
 };
 
-const Thing = ({ subscribeToNewComments, data }: any) => {
-	useEffect(() => {
-		subscribeToNewComments();
-		// eslint-disable-next-line
-	}, []);
-	return (
-		<div>
-			{data
-				? data.getMessagesFromConvo.messages.map((x: any, key: any) => {
-						return <div key={key}>{x.text}</div>;
-				  })
-				: null}
-		</div>
-	);
-};
-
-export default Test;
+export default MessagesContainer;

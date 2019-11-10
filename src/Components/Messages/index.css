@@ -1,0 +1,69 @@
+#chat-convo {
+	height: inherit;
+}
+
+#chat-wrapper {
+	width: 500px;
+	height: 500px;
+	align-self: center;
+	margin: auto;
+}
+
+.chat-comp-container {
+	height: 10%;
+	width: 100%;
+	border-bottom: 1px solid #c8c8cc;
+	display: flex;
+	align-items: center;
+}
+
+#chat-convo-current-name {
+	font-size: 1rem;
+	color: black;
+	font-weight: 400;
+}
+
+#chat-convo-messages {
+	height: calc(82% - 11px);
+	overflow-y: scroll;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	padding: 5px 0px;
+}
+
+.chat-convo-bubble {
+	max-width: 55%;
+	padding: 6px 13px;
+	border-radius: 20px;
+	font-size: 0.7rem;
+	line-height: 20px;
+	margin: 1px 0px;
+}
+
+#chat-convo-interactions {
+	height: 8%;
+	background: white;
+	/* box-shadow: -2px 2px 4px lightgrey; */
+	border: 1px solid lightgrey;
+	border-radius: 3px;
+	display: grid;
+	grid-template-columns: 0.2fr 2.6fr 0.2fr;
+}
+
+.chat-convo-btns {
+	width: 50%;
+	margin: auto;
+	outline: none;
+}
+
+#chat-convo-input {
+	border: 0px;
+	background: transparent;
+	outline: none;
+}
+
+#chat-convo-messages::-webkit-scrollbar {
+	width: 0px;
+	background: transparent;
+}
