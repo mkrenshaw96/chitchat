@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useQuery } from 'react-apollo';
 import gql from 'graphql-tag';
 
@@ -51,7 +51,7 @@ const Test = () => {
 						console.log('this ran');
 						return Object.assign({}, getMessagesFromConvo, {
 							getMessagesFromConvo: {
-								__typename: 'ChatMessagesResponse',
+								__typename: getMessagesFromConvo.__typename,
 								ok: getMessagesFromConvo.ok,
 								messages: [...getMessagesFromConvo.messages, message]
 							}
@@ -64,7 +64,10 @@ const Test = () => {
 };
 
 const Thing = ({ subscribeToNewComments, data }: any) => {
-	subscribeToNewComments();
+	useEffect(() => {
+		subscribeToNewComments();
+		// eslint-disable-next-line
+	}, []);
 	return (
 		<div>
 			{data
